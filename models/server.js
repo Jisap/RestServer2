@@ -1,5 +1,6 @@
 const express = require('express');     // Inicializamos la libreria express
 const cors = require('cors');
+const { dbConnection } = require('../database/config');
 
 class Server{
 
@@ -8,9 +9,16 @@ class Server{
         this.port = process.env.PORT;       // Inicializamos el puerto del server
         this.usuariosPath = '/api/usuarios';// Definimos el path de trabajo de usuarios
 
+        this.conectarDB();                  // Conectamos a la bd
+
         this.middlewares();                 // Inicializamos un middleware
         
         this.routes();                      // Inicializamos nuestras rutas.
+    }
+
+    async conectarDB(){                     // Método para conectar a la bd configurado en config.js
+
+        await dbConnection();
     }
 
     middlewares(){
