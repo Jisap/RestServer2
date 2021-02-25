@@ -57,14 +57,17 @@ const usuariosPut = async (req, res = response) => {
 
 const usuariosDelete = async(req, res = response) => {
 
-    const { id } = req.params;                                    // Extraemos el id de los params del url          
-    
+    const { id } = req.params;                                    // Extraemos el id de los params del url           
+
     //Físicamente lo borramos
     //const usuario = await Usuario.findByIdAndDelete(id)
     
-    const usuario = await Usuario.findByIdAndUpdate(id, {estado:false});
+    const usuario = await Usuario.findByIdAndUpdate(id, {estado:false}); // Buscamos el usuario en la bd con la id proporcionada y cambiamos el estado
 
-    res.json(usuario);
+    const usuarioAutenticado = req.usuario;                              // Identificamos el usuario cuyo token ha servido para borrar otro usuario
+
+    res.json({usuario, usuarioAutenticado});                             // Mostramos el usuario cuyo estado ha cambiado y el usuario cuyo
+                                                                         // token se uso para cambiarlo  
 }
 
 

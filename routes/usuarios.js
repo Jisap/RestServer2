@@ -2,7 +2,12 @@
 const { Router } = require('express');          // Desestructuramos Router del paquete express
 const { check } = require('express-validator');
 const { esRoleValido, emailExiste, existeUsuarioPorID } = require('../helpers/db-validators');
-const { validarCampos } = require('../middlewares/validar-campos');
+
+// const { validarCampos } = require('../middlewares/validar-campos');
+// const { validarJWT } = require('../middlewares/validar-jwt');
+// const { esAdminRole, tieneRole } = require('../middlewares/validar-roles');
+
+const {validarCampos, validarJWT, esAdminRole, tieneRole} = require('../middlewares')
 
 const { usuariosGet } = require('../controllers/usuarios');
 const { usuariosPosts} = require('../controllers/usuarios')
@@ -33,8 +38,11 @@ const router = Router();                        // router contendrá los distint
         ], usuariosPosts);
 
         router.delete('/:id',[
-                check('id', 'No es una ID válido').isMongoId(),
-                check('id').custom(existeUsuarioPorID),
+                validarJWT,                                                     // Comprobaremos que el usuario que quiere borrar esta validado
+                //esAdminRole,                                                  // Este middleware es estricto, solo los admin_role puede borrar
+                tieneRole('ADMIN_ROLE','VENTAS_ROLE'),                          // Este middleware admite los roles de la lista
+                check('id', 'No es una ID válido').isMongoId(),                 // Se comprobará que id es un mongoId
+                check('id').custom(existeUsuarioPorID),                         // Y comprobaremos que el usuario existe
                 validarCampos
         ], usuariosDelete);
 

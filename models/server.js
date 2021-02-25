@@ -9,6 +9,8 @@ class Server{
         this.port = process.env.PORT;       // Inicializamos el puerto del server
         this.usuariosPath = '/api/usuarios';// Definimos el path de trabajo de usuarios
 
+        this.authPath = '/api/auth';         // Definimos el path para realizar la autenticación
+
         this.conectarDB();                  // Conectamos a la bd
 
         this.middlewares();                 // Inicializamos un middleware
@@ -35,7 +37,11 @@ class Server{
     routes(){                                                           // Este método define mis rutas
 
         this.app.use(this.usuariosPath, require('../routes/usuarios')); // Cuando se escriba la ruta definida se llamará al endpoint(usuarios.js)
-    }                                                                   // y allí se usará el tipo de petición que definamos nosotros.  
+                                                                        // y allí se usará el tipo de petición que definamos nosotros. 
+        this.app.use(this.authPath, require('../routes/auth'));         // Cuando se escriba la ruta de auth se llamará a auth.js
+    
+    
+    }                                                                    
 
     listen(){                                                           // Este método define el puerto de escucha   
 
