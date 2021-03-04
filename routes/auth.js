@@ -2,7 +2,7 @@
 
 const { Router } = require('express');          // Desestructuramos Router del paquete express
 const { check } = require('express-validator');
-const { login } = require('../controllers/auth');
+const { login, googleSignin } = require('../controllers/auth');
 const { validarCampos } = require('../middlewares/validar-campos');
 
 const router = Router();
@@ -12,5 +12,10 @@ const router = Router();
         check('password', 'La contraseña es obligatoria').not().isEmpty(),  // Chekeamos que la password no venga vacia
         validarCampos
     ],login );                                                          
+
+    router.post('/google', [                                                 // Configuramos la ruta hacia google. 
+        check('id_token', 'El id_token es necesario').not().isEmpty(),       // Chekeamos que la url contenga el id_token
+        validarCampos
+    ],googleSignin );
 
 module.exports = router;
