@@ -7,9 +7,14 @@ class Server{
     constructor(){
         this.app = express();               // Inicializamos la clase Server con express a través de app
         this.port = process.env.PORT;       // Inicializamos el puerto del server
-        this.usuariosPath = '/api/usuarios';// Definimos el path de trabajo de usuarios
 
-        this.authPath = '/api/auth';         // Definimos el path para realizar la autenticación
+        this.paths = {
+            auth:      '/api/auth',         // Definimos el path para realizar la autenticación
+            usuarios:  '/api/usuarios',     // Definimos el path de trabajo de usuarios
+            categorias:'/api/categorias',   // Definimos el path de trabajo de categorias   
+            productos: '/api/productos',
+            buscar:    '/api/buscar'
+        }       
 
         this.conectarDB();                  // Conectamos a la bd
 
@@ -36,11 +41,15 @@ class Server{
 
     routes(){                                                           // Este método define mis rutas
 
-        this.app.use(this.usuariosPath, require('../routes/usuarios')); // Cuando se escriba la ruta definida se llamará al endpoint(usuarios.js)
-                                                                        // y allí se usará el tipo de petición que definamos nosotros. 
-        this.app.use(this.authPath, require('../routes/auth'));         // Cuando se escriba la ruta de auth se llamará a auth.js
+        this.app.use(this.paths.usuarios, require('../routes/usuarios')); // Cuando se escriba la ruta definida se llamará al endpoint(usuarios.js)
+                                                                          // y allí se usará el tipo de petición que definamos nosotros. 
+        this.app.use(this.paths.auth, require('../routes/auth'));         // Cuando se escriba la ruta de auth se llamará a auth.js
     
+        this.app.use(this.paths.categorias, require('../routes/categorias'));
+
+        this.app.use(this.paths.productos, require('../routes/productos'));
     
+        this.app.use(this.paths.buscar, require('../routes/buscar'));
     }                                                                    
 
     listen(){                                                           // Este método define el puerto de escucha   
