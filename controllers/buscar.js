@@ -43,7 +43,7 @@ const buscarCategorias = async(termino='', res=response) => {
         });
     }
 
-    const regex = new RegExp(termino, 'i')                      // Lo que buscamos será el término y será insensible a may y min
+    const regex = new RegExp(termino, 'i')                      // Lo que buscamos será el término y será insensible a mays y mins
     const categorias = await Categoria.find({                   // Si lo que buscamos no es por uid sino por un texto
         nombre:regex, estado:true                               // Mongo buscará en el nombre con el término de busqueda
     });   

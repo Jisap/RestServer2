@@ -1,5 +1,6 @@
 const express = require('express');     // Inicializamos la libreria express
 const cors = require('cors');
+const fileUpload = require('express-fileupload');
 const { dbConnection } = require('../database/config');
 
 class Server{
@@ -13,7 +14,8 @@ class Server{
             usuarios:  '/api/usuarios',     // Definimos el path de trabajo de usuarios
             categorias:'/api/categorias',   // Definimos el path de trabajo de categorias   
             productos: '/api/productos',
-            buscar:    '/api/buscar'
+            buscar:    '/api/buscar',
+            uploads:   '/api/uploads'
         }       
 
         this.conectarDB();                  // Conectamos a la bd
@@ -37,6 +39,12 @@ class Server{
         this.app.use(cors());                                           // CORS permite restringir que dominios usan nuestro restserver
         this.app.use(express.json());                                   // Lectura y parseo del body (Cuando enviamos datos post)
         this.app.use(express.static('public'));                         // Nos redirecciona a index.html sino encuentra una ruta definida
+        this.app.use(fileUpload({                                       // Gestiona la carga de archivos usando un directorio temporal
+            useTempFiles : true,
+            tempFileDir : '/tmp/',
+            createParentPath: true
+        }));
+        
     }
 
     routes(){                                                           // Este método define mis rutas
@@ -50,6 +58,8 @@ class Server{
         this.app.use(this.paths.productos, require('../routes/productos'));
     
         this.app.use(this.paths.buscar, require('../routes/buscar'));
+    
+        this.app.use(this.paths.uploads, require('../routes/uploads'))
     }                                                                    
 
     listen(){                                                           // Este método define el puerto de escucha   
