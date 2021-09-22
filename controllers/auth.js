@@ -1,11 +1,9 @@
-//
+//npm install google-auth-library --save
 const { response } = require("express");
 const Usuario = require('../models/usuario');
 const bcryptjs = require('bcryptjs');
 const { generarJWT } = require("../helpers/generar-jwt");
 const { googleVerify } = require("../helpers/google-verify");
-
-
 
 const login = async(req, res = response) => {
 
@@ -57,7 +55,7 @@ const login = async(req, res = response) => {
 
 const googleSignin = async(req, res=response) => {
 
-    const { id_token } = req.body; // Del body extraemos el id_token
+    const { id_token } = req.body; // Del body enviado por el frontend extraemos el id_token
 
     try {
             //googleUser

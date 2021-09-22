@@ -13,7 +13,7 @@ const router = Router();
         validarCampos
     ],login );                                                          
 
-    router.post('/google', [                                                 // Configuramos la ruta hacia google. 
+    router.post('/google', [                                                 // Configuramos la ruta hacia api/auth/google. 
         check('id_token', 'El id_token es necesario').not().isEmpty(),       // Chekeamos que la url contenga el id_token
         validarCampos
     ],googleSignin );

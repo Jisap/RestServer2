@@ -12,7 +12,7 @@
     <h1>Google Signin</h1>
     <hr>
 
-    <div class="g-signin2" data-onsuccess="onSignIn"></div>
+    <!-- <div class="g-signin2" data-onsuccess="onSignIn"></div>
     <a href="#" onclick="signOut();">Sign out</a>
 
     <script src="https://apis.google.com/js/platform.js" async defer></script>
@@ -51,6 +51,67 @@
                 });
         }
 
+    </script> -->
+
+    <!--Carga de credenciales de google y Conexion a Google identities con un callback-->
+    <div id="g_id_onload" 
+         data-client_id="170305983302-e7ph5h4uj2jvqdntp7g4n392o0hejtcm.apps.googleusercontent.com" 
+         data-auto_prompt="false"
+         data-callback="handleCredentialResponse">
+    </div>
+
+    <!--Boton de Google identities-->
+    <div 
+        class="g_id_signin" 
+        data-type="standard" 
+        data-size="large" 
+        data-theme="outline" 
+        data-text="sign_in_with"
+        data-shape="rectangular" 
+        data-logo_alignment="left">
+    </div>
+
+    <button id="google-signout">
+        Signout
+    </button>
+
+    <!--Libreria de google identities-->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <!--Callback de generación del token-->
+    <script>
+        function handleCredentialResponse(response) {
+
+            //console.log( 'id_token', response.credential ); // Google token : ID_TOKEN
+            
+            const body = { id_token: response.credential };   // Definimos el body de la petición con el token de google
+
+            fetch('http://localhost:8080/api/auth/google', { // Petición al backend de autenticación del token de google
+                method:'POST',
+                headers: {
+                    'Content-Type':'application/json'
+                },
+                body: JSON.stringify( body )
+            })         
+                .then( res => res.json())                    // Si la respuesta fue positiva la pasamos a Json
+                .then( res => {                              // Imprimimos la respuesta del backend
+                    console.log( res )
+                    localStorage.setItem( 'email', res.usuario.correo )
+                })
+                .catch( err => {
+                    console.log( err )
+                });
+        }
+
+        const button = document.getElementById('google-signout');                     // Identificamos el boton de logout
+        button.onclick = () => {                                                      // Cuando se haga click
+            console.log( google.accounts.id )
+            google.accounts.id.disableAutoSelect()                                    // Desabilitamos el seguimiento de la cuenta logeada para guardar el estado de las cookies 
+            google.accounts.id.revoke( localStorage.getItem( 'email' ), done => {     // Revocamos la concesión de OAuth utilizada para compartir el token de ID para el usuario especificado.
+                localStorage.clear();                                                 // Luego se limpia el localStorage
+                location.reload();                                                // y se recarga.        
+            })
+        }
     </script>
 </body>
 </html>
